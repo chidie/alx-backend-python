@@ -74,6 +74,18 @@ def main():
     logger.info("Connected to ALX_prodev database.")
     create_table(prodev_connection)
     logger.info("Table creation complete.")
+
+    file = 'python-generators-0x00/user_data.csv'
+    with open(file=file, newline='') as csvfile:
+        data_reader = csv.reader(csvfile)
+        next(data_reader)  # Skip header row
+        data = [row for row in data_reader]
+    
+    insert_data(prodev_connection, data)
+    logger.info("Data insertion complete.")
+    prodev_connection.close()
+    # db_connection.close()
+    
     
 
 if __name__ == "__main__":
