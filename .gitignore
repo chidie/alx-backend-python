@@ -1,0 +1,5 @@
+project_venv/
+__pycache__/
+.env/
+01-init.sql
+*.pyc
