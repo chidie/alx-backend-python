@@ -16,7 +16,8 @@ def should_seed(connection):
         return True  # Should seed because the table does not exist
     return False  # Table exists, assume it's seeded
 
-def stream_users(connection):
+def stream_users():
+    connection = connect_db(database="ALX_prodev")
     logger.info("Streaming users from the database...")
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT * FROM user_data;")
@@ -42,8 +43,7 @@ def main():
         connection.close()
     else:
         logger.info("Database already seeded. Skipping seeding step to stream users from user_data...")
-        connection = connect_db(database="ALX_prodev")
-        for user in stream_users(connection):
+        for user in stream_users():
             logger.info(f"User: {user}")
         logger.info("Finished streaming users from the database.")
     connection.close()
