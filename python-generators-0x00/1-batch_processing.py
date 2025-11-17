@@ -23,6 +23,10 @@ def stream_users_in_batches():
 def batch_processing():
     """Process users in batches."""
     batch_number = 0
+    if not connection:
+        logger.error("Failed to connect to the database for batch processing.")
+        return
+    
     for batch in stream_users_in_batches():
         logger.info(f"Processing batch {batch_number} with {len(batch)} users.")
         for user in batch:
