@@ -4,25 +4,40 @@ import os
 import csv
 import uuid
 from logger import logger
+import time
+
 
 load_dotenv()
 
-def connect_db():
-    try:
-        logger.info("Connecting to the MySQL database...")
-        connection = mysql.connector.connect(
-            host="127.0.0.1",
-            user=os.getenv("MYSQL_USER"),
-            password=os.getenv("MYSQL_PASSWORD"),
-            port=3306
-        )
-        logger.info("Successfully connected to the database.")
-        return connection
-    except mysql.connector.Error as err:
-        logger.error(f"Error connecting to the database: {err}")
-        return None
-    finally:
-        logger.info("Database connection attempt finished.")
+def connect_db(retries=10, delay=5, database=None):
+    for attempt in range(retries):
+        try:
+            logger.info("Connecting to the MySQL database...")
+
+            conn_params = {
+                "host": "db",
+                "user": os.getenv("MYSQL_USER"),
+                "password": os.getenv("MYSQL_PASSWORD"),
+                "port": 3306
+            }
+            if database:
+                conn_params["database"] = database
+
+            connection = mysql.connector.connect(**conn_params)
+
+            logger.info(
+                "Successfully connected to MySQL"
+                + (f" database '{database}'." if database else " (no default database).")
+            )
+            return connection
+
+        except mysql.connector.Error as err:
+            logger.error(f"Error connecting to the database: {err}")
+            time.sleep(delay)
+
+        finally:
+            logger.info("Database connection attempt finished.")
+    return None
 
 def create_database(connection):
     cursor = connection.cursor()
@@ -32,7 +47,7 @@ def create_database(connection):
 
 def connect_to_prodev():
     return mysql.connector.connect(
-        host="localhost",
+        host="db",
         user=os.getenv("MYSQL_USER"),
         password=os.getenv("MYSQL_PASSWORD"),
         database="ALX_prodev"
@@ -64,10 +79,9 @@ def insert_data(connection, data):
     connection.commit()
     cursor.close()
 
-def main():
+def main_seed():
     db_connection = connect_db()
     create_database(db_connection)
-    db_connection.close()
     logger.info("Database and table setup complete.")
 
     prodev_connection = connect_to_prodev() # Connect to the ALX_prodev database
@@ -75,7 +89,7 @@ def main():
     create_table(prodev_connection)
     logger.info("Table creation complete.")
 
-    file = 'python-generators-0x00/user_data.csv'
+    file = 'user_data.csv'
     with open(file=file, newline='') as csvfile:
         data_reader = csv.reader(csvfile)
         next(data_reader)  # Skip header row
@@ -84,9 +98,8 @@ def main():
     insert_data(prodev_connection, data)
     logger.info("Data insertion complete.")
     prodev_connection.close()
-    # db_connection.close()
-    
+    db_connection.close()
     
 
 if __name__ == "__main__":
-    main()
+    main_seed()
