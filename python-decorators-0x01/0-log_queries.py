@@ -3,7 +3,7 @@ import time
 import functools
 import mysql.connector
 from logger import logger
-from dotenv import load_dotenv
+from datetime import datetime
 
 
 def connect_db(retries=10, delay=5, database=None):
@@ -58,6 +58,9 @@ def fetch_all_users(query):
 
 
 if __name__ == "__main__":
+    start_time = datetime.utcnow()
     users = fetch_all_users(query="SELECT * FROM user_data;")
+    end_time = datetime.utcnow()
+    logger.info(f"Query executed in: {(end_time - start_time).total_seconds()} seconds")
     logger.info(f"Users: ", users)
 
