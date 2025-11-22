@@ -1,6 +1,6 @@
-import functools
 import os
 import time
+import functools
 import mysql.connector
 from logger import logger
 
@@ -53,15 +53,36 @@ def with_db_connection(database="ALX_prodev", retries=10, delay=5):
     
     return decorator
 
+def transactional(func):
+    """Decorator to wrap DB operations inside a transaction"""
+
+    @functools.wraps(func)
+    def wrapper(conn, *args, **kwargs):
+        try:
+            result = func(conn, *args, **kwargs)
+            conn.commit()
+            logger.info("Transaction committed successfully.")
+            return result
+        except Exception as e:
+            logger.error(f"Error occurred in {func.__name__}(). Rolling back...")
+            conn.rollback()
+            raise e
+    return wrapper
+
 @with_db_connection (database="ALX_prodev")
-def fetch_users(conn):
+@transactional
+def update_user_email(conn, user_id, new_email):
+    """ Updates a user's email using safe parameterized SQL.
+        Uses automatic connection management + transactions.
+    """
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM user_data;")
+    cursor.execute("UPDATE user_data SET email = %s where user_id = %s;", (new_email, user_id))
+    cursor.execute("select * from user_data LIMIT 5")
     result = cursor.fetchall()
     cursor.close()
     return result
 
 
 if __name__ == "__main__":
-    users = fetch_users()
-    logger.info(f"Users retrieved by decorators: {users}")
+    updated_table = update_user_email(user_id='00369a24-c017-4ed4-ac4d-31fc80f9a6ae', new_email='ruthenewemail@ceot.com') # update_user_email = with_db_connection(transactional(update_user_email))
+    logger.info(f"Updated user_date table: {updated_table}")
