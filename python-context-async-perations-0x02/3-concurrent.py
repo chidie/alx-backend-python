@@ -27,20 +27,22 @@ records = [
 
 
 # cursor.executemany(insert_records_sql, records)
-async def async_fetch_users(db_path="user_data.db"):
+async def async_fetch_users():
     """
     Fetch all users from the database asynchronously.
     """
+    db_path="user_data.db"
     async with aiosqlite.connect(db_path) as db:
         cursor = await db.execute("SELECT * FROM users")
         rows = await cursor.fetchall()
         await cursor.close()
         return rows
 
-async def async_fetch_older_users(db_path="user_data.db", age_limit=40):
+async def async_fetch_older_users():
     """
     Fetch users older than 40 asynchronously.
     """
+    db_path="user_data.db", age_limit=40
     async with aiosqlite.connect(db_path) as db:
         cursor = await db.execute("SELECT * FROM users WHERE age > ?", (age_limit,))
         rows = await cursor.fetchall()
