@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import unittest
+from client import GithubOrgClient
 from unittest.mock import patch, Mock
 from parameterized import parameterized
 from utils import memoize, access_nested_map, get_json
-
 
 class TestAccessNestedMap(unittest.TestCase):
     """Unit tests for access_nested_map"""
@@ -66,6 +66,26 @@ class TestMemoize(unittest.TestCase):
             self.assertEqual(first_call, 42)
             self.assertEqual(second_call, 42)
             mock_method.assert_called_once()
+
+class TestGithubOrgClient(unittest.TestCase):
+    """Unit tests for GithubOrgClient"""
+
+    @parameterized.expand([
+        ("google"),
+        ("abc"),
+    ])
+    @patch("client.get_json")   # patch where it is imported, not where defined
+    def test_org(self, org_name, mock_get_json):
+        """Test that GithubOrgClient.org returns correct value"""
+
+        expected_payload = {"org": org_name}
+        mock_get_json.return_value = expected_payload
+
+        client = GithubOrgClient(org_name)
+        result = client.org
+
+        mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
+        self.assertEqual(result, expected_payload)
 
 
 if __name__ == "__main__":
