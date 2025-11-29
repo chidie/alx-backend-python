@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import unittest
 from utils import memoize
 from unittest.mock import patch, Mock
@@ -42,13 +41,9 @@ class TestGetJson(unittest.TestCase):
         with patch("utils.requests.get") as mock_get:
             mock_response = Mock()
             mock_response.json.return_value = test_payload
-
-            # requests.get() should return this mock response
             mock_get.return_value = mock_response
             result = get_json(test_url)
             mock_get.assert_called_once_with(test_url)
-
-            # Ensure get_json returned the correct payload
             self.assertEqual(result, test_payload)
 
 class TestMemoize(unittest.TestCase):
