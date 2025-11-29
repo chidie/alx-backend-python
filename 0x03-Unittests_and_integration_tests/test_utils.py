@@ -40,17 +40,12 @@ class TestGetJson(unittest.TestCase):
         """Test that get_json returns expected result using a mocked requests.get"""
 
         with patch("utils.requests.get") as mock_get:
-            # Create a mock response with a .json() method
             mock_response = Mock()
             mock_response.json.return_value = test_payload
 
             # requests.get() should return this mock response
             mock_get.return_value = mock_response
-
-            # Call the function under test
             result = get_json(test_url)
-
-            # Ensure requests.get was called exactly once with the right argument
             mock_get.assert_called_once_with(test_url)
 
             # Ensure get_json returned the correct payload
@@ -74,9 +69,9 @@ class TestMemoize(unittest.TestCase):
 
             self.assertEqual(first_call, 42)
             self.assertEqual(second_call, 42)
-
             mock_method.assert_called_once()
 
 
 if __name__ == "__main__":
     unittest.main()
+
