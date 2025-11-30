@@ -130,6 +130,8 @@ class MyClass:
 
 ---
 
+test_client is for mocking a property.
+
 ## 🧑‍💻 Author  
 Chidiebere Emmanuel Onuoha
 

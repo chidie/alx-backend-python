@@ -26,7 +26,7 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
         self.assertEqual(result, expected_payload)
 
-class TestGithubOrgClient1(unittest.TestCase):
+class TestGithubOrgClient(unittest.TestCase):
     """Unit tests for GithubOrgClient"""
 
     def test_public_repos_url(self):
@@ -45,11 +45,8 @@ class TestGithubOrgClient1(unittest.TestCase):
             result = client._public_repos_url
             print("Result: ", result)
             print("Expected URL: ", expected_url)
-            # self.assertEqual(result, expected_url)
+            self.assertEqual(result, expected_url)
             self.assertAlmostEqual(result, expected_url)
-
-class TestGithubOrgClient(unittest.TestCase):
-    """Unit tests for GithubOrgClient"""
 
     @parameterized.expand([
         ("google",),
@@ -110,6 +107,16 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(result, expected)
         mock_repos_url.assert_called_once()
         mock_get_json.assert_called_once_with(fake_url)
+    
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False),
+    ])
+    def test_has_license(self, repo, license_key, expected):
+        """Unit-test GithubOrgClient.has_license"""
+        client = GithubOrgClient("testorg")
+        result = client.has_license(repo, license_key)
+        self.assertEqual(result, expected)
 
 
 
