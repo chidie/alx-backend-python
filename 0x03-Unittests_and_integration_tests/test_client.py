@@ -24,8 +24,7 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
         self.assertEqual(result, expected_payload)
 
-
-class TestGithubOrgClient(unittest.TestCase):
+class TestGithubOrgClient1(unittest.TestCase):
     """Unit tests for GithubOrgClient"""
 
     def test_public_repos_url(self):
@@ -46,6 +45,43 @@ class TestGithubOrgClient(unittest.TestCase):
             print("Expected URL: ", expected_url)
             # self.assertEqual(result, expected_url)
             self.assertAlmostEqual(result, expected_url)
+
+class TestGithubOrgClient(unittest.TestCase):
+
+    @patch("client.get_json")
+    def test_public_repos(self, mock_get_json):
+        """Test GithubOrgClient.public_repos"""
+
+        # Fake repo payload returned by get_json()
+        payload = [
+            {"name": "repo1"},
+            {"name": "repo2"},
+            {"name": "repo3"},
+        ]
+        mock_get_json.return_value = payload
+
+        # Fake repos URL returned by _public_repos_url
+        fake_url = "http://example.com/repos"
+
+        with patch.object(
+            GithubOrgClient,
+            "_public_repos_url",
+            new_callable=PropertyMock,
+            return_value=fake_url
+        ) as mock_repos_url:
+
+            client = GithubOrgClient("testorg")
+            result = client.public_repos()
+
+        # Expected list of repository names
+        expected = ["repo1", "repo2", "repo3"]
+
+        # Assertions
+        self.assertEqual(result, expected)
+
+        # Ensure mocks were called once
+        mock_repos_url.assert_called_once()
+        mock_get_json.assert_called_once_with(fake_url)
 
 
 if __name__ == "__main__":
