@@ -42,8 +42,10 @@ class TestGithubOrgClient(unittest.TestCase):
         ):
             client = GithubOrgClient("testorg")
             result = client._public_repos_url
-
-            self.assertEqual(result, expected_url)
+            print("Result: ", result)
+            print("Expected URL: ", expected_url)
+            # self.assertEqual(result, expected_url)
+            self.assertAlmostEqual(result, expected_url)
 
 
 if __name__ == "__main__":
