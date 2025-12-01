@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import unittest
+from parameterized import parameterized_class
 from unittest.mock import Mock, patch, PropertyMock
-from parameterized import parameterized, parameterized_class
+from parameterized import parameterized
 
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
@@ -163,11 +164,12 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         client = GithubOrgClient("google")
         self.assertEqual(client.public_repos("apache-2.0"), self.apache2_repos)
 
+
 if __name__ == "__main__":
     unittest.main()
-    # print("ORG PAYLOAD: ", org_payload)
-    # print("REPO PAYLOAD: ", repos_payload)
-    # print("EXPECTED REPO: ", expected_repos)
-    # print("APACHE REPOS:", apache2_repos)
+
+
+
+
 
 
