@@ -132,6 +132,15 @@ class MyClass:
 
 test_client is for mocking a property.
 
+### To check query your sqlite3 database, keep this in mind.
+```bash
+    sqlite3 database_name
+    .tables
+    .schema # (optional)
+    SELECT * FROM table_name LIMIT 10
+    .exit # To exit
+```
+
 ## 🧑‍💻 Author  
 Chidiebere Emmanuel Onuoha
 
