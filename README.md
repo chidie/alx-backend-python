@@ -132,6 +132,20 @@ class MyClass:
 
 test_client is for mocking a property.
 
+### Django setup.py should contain:
+``` bash
+    # REST Framework configuration
+    REST_FRAMEWORK = {
+        "DEFAULT_PERMISSION_CLASSES": [
+            "rest_framework.permissions.AllowAny",
+        ],
+        "DEFAULT_AUTHENTICATION_CLASSES": [
+            "rest_framework.authentication.SessionAuthentication",
+            "rest_framework.authentication.BasicAuthentication",
+        ],
+    }
+```
+
 ### To check query your sqlite3 database, keep this in mind.
 ```bash
     sqlite3 database_name
