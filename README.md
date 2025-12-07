@@ -155,6 +155,36 @@ test_client is for mocking a property.
     .exit # To exit
 ```
 
+### Core Django Project Files
+> manage.py - Serves as a command-line utility for interacting with the project. With it, commands like 'runserver', 'migrate', 'createsuperuser' can be run. It also acts as the entry point for Django's administrative tasks. Overall, it wraps django admin with project's settings to avoid manually specifying them.
+
+> settings.py - This is the central configuration file for your project. Defines database connections, installed apps, middleware, templates, static files, authentication, etc. Ensures consistency across the project by centralizing configuration. Without it, Django wouldn't know how to connect to your database or which apps to load.
+
+> urls.py - URL dispatcher (routing system). It maps incoming HTTP requests to the correct views. It keeps routing logic seperate from business logic. Without it, Django wouldn't know which view to call when a user visit a URL.
+
+> wsgi.py - Entry point for WSGI-compatible web servers (eng., Gunicorn, uWSGI). It defines how the project communicates with production web servers. It is required for deployment in most environments. Without it, the app couldn't run on a standard web server.
+
+> asgi.py - Entry point for ASGI-compatible servers (e.g., Daphne, Uvicorn). It must be present because it enables asynchronous features like WebSockets and long-lived connections. It is required for modern Django apps that use async views or real-time communication. It complements wsgi.py for async deployments.
+
+### Key Files Inside Each App
+>models.py - Defines database schema via Django ORM. It must be present because it maps Python classes to database tables. Without it, you couldn't persist or query data.
+
+>views.py - Contains request-handling logic. It defines how the data is processed and returned (HTML, JSON, etc,). Without it, URLs would have no logic to execute.
+
+>admin.py - Registers models with Django Admin. Allows for the management of data via the built-in admin interface. Without it, your models wouldn't appear in the admin dashboard.
+
+>apps.py - App configuration file. It defines metadata about the app (name, signals, etc.) and it ensures Django can discover and initialize the app correctly.
+
+>tests.py - Contains unit tests for the app. It ensures your code works as expected. While not strictly required, it's best practice for maintainability.
+
+>NOTE:
+```bash
+    python manage.py makemigrations # only when there has been changes in the model (added/removed fields, new models, alteres)
+    python manage.py migrate        # run after makemigrations to apply those changes to the database.
+    python manage.py runserver      # run to start the development server and test the routes
+    python manage.py check          # runs Django system checks to ensure the  project configuration is valid
+```
+
 ## 🧑‍💻 Author  
 Chidiebere Emmanuel Onuoha
 
