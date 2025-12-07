@@ -35,7 +35,6 @@ class MessageSerializer(serializers.ModelSerializer):
         fields = ["message_id", "conversation", "sender", "message_body", "sent_at", "preview"]
     
     def validate_message_body(self, value):
-        # Example validation: message must not be empty
         if not value.strip():
             raise serializers.ValidationError("Message body cannot be blank.")
         return value
@@ -43,7 +42,12 @@ class MessageSerializer(serializers.ModelSerializer):
 class ConversationSerializer(serializers.ModelSerializer):
     participants = UserSerializer(many=True, read_only=True)
     messages = MessageSerializer(many=True, read_only=True, source="messages")
-    
+    participant_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Conversation
-        fields = ["conversation_id", "participants", "created_at", "messages"]
+        fields = ["conversation_id", "participants", "created_at", "messages", "participant_count"]
+
+    def get_participant_count(self, obj):
+        return obj.participants.count()
+
