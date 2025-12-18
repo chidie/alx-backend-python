@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from .managers import CustomUserManager
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 
@@ -21,6 +22,8 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
+
+    objects = CustomUserManager()
 
     def __str__(self):
         return f"{self.email} ({self.role})"
