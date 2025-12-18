@@ -1,6 +1,8 @@
 import os
 import mysql.connector
-from logger import logger
+# from logger import logger
+import logging
+logger = logging.getLogger(__name__)
 
 
 class DatabaseConnection:

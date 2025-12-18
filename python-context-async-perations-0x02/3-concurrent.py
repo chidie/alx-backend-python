@@ -1,7 +1,6 @@
 import sqlite3
 import asyncio
 import aiosqlite
-# from logger import logger
 
 
 create_table_sql = """

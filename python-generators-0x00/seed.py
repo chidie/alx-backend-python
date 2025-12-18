@@ -3,8 +3,9 @@ from dotenv import load_dotenv
 import os
 import csv
 import uuid
-from logger import logger
 import time
+import logging
+logger = logging.getLogger(__name__)
 
 
 load_dotenv()

@@ -2,7 +2,8 @@ import os
 import time
 import functools
 import mysql.connector
-from logger import logger
+import logging
+logger = logging.getLogger(__name__)
 
 query_cache = {}
 

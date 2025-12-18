@@ -2,8 +2,9 @@ import os
 import time
 import functools
 import mysql.connector
-from logger import logger
 from datetime import datetime
+import logging
+logger = logging.getLogger(__name__)
 
 
 def connect_db(retries=10, delay=5, database=None):

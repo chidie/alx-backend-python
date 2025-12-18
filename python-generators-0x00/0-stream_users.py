@@ -1,5 +1,6 @@
-from logger import logger
 from seed import main_seed, connect_db
+import logging
+logger = logging.getLogger(__name__)
 
 def should_seed(connection):
     cursor = connection.cursor()

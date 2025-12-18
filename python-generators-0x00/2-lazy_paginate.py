@@ -1,5 +1,6 @@
-from logger import logger
 from seed import connect_db
+import logging
+logger = logging.getLogger(__name__)
 
 connection = connect_db(database="ALX_prodev")
 

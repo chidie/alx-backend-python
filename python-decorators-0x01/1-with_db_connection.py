@@ -2,7 +2,8 @@ import functools
 import os
 import time
 import mysql.connector
-from logger import logger
+import logging
+logger = logging.getLogger(__name__)
 
 
 def connect_db(database="ALX_prodev", retries=10, delay=5):
