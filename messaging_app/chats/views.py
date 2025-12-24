@@ -28,6 +28,16 @@ class ConversationViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    def retrieve(self, request, *args, **kwargs):
+        conversation_id = kwargs.get('pk')
+        conversation = self.get_object()
+
+        if conversation.user != request.user:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = self.get_serializer(conversation)
+        return Response(serializer.data)
+
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     permission_classes = [IsParticipantOfConversation]
