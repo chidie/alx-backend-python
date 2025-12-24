@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from .models import User, Conversation, Message
 from rest_framework import viewsets, status, filters
 from .serializers import UserSerializer, ConversationSerializer, MessageSerializer
-from .permissions import IsOwner
+from .permissions import IsOwner, IsParticipantOfConversation
 from rest_framework.permissions import IsAuthenticated
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -18,7 +18,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class ConversationViewSet(viewsets.ModelViewSet):
     serializer_class = ConversationSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsParticipantOfConversation]
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ["created_at"]
 
@@ -30,7 +30,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
 
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsParticipantOfConversation]
     filter_backends = [filters.SearchFilter]
     search_fields = ["message_body"]
 
@@ -38,4 +38,4 @@ class MessageViewSet(viewsets.ModelViewSet):
         return Message.objects.filter(conversation__user=self.request.user) # conversation__participants for many-to-many relationship
     
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(sender=self.request.user)
