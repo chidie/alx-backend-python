@@ -15,6 +15,10 @@ class IsParticipantOfConversation(permissions.BasePermission):
         """
         user = request.user
 
+        # These methods require participant rights
+        if request.method in ["PUT", "PATCH", "DELETE"]:
+            return request.user in obj.participants.all()
+        
         # If the object is a conversation, check if the user is a participant
         if hasattr(obj, "participants"):
             return user in obj.participants.all()
