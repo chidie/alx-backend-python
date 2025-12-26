@@ -1,0 +1,456 @@
+{
+	"info": {
+		"_postman_id": "263db835-71d2-4e8e-ad38-0c12505eb536",
+		"name": "post_man-Collections",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25255366"
+	},
+	"item": [
+		{
+			"name": "Listings",
+			"item": [
+				{
+					"name": "retrieve listings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/listings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"listings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create listing",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Beach House\",\r\n  \"description\": \"A stunning beachfront property\",\r\n  \"price\": 50.00,\r\n  \"location\": \"Kasoa, Ghana\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/listings/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"listings",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bookings",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/bookings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"bookings"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "JWT_Requests",
+			"item": [
+				{
+					"name": "Login_admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin2@example.com\",\r\n    \"password\": \"Th1nkb0ld!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/token/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"token",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login_alice",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "header",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "secret",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "payload",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2NTg2OTA3LCJpYXQiOjE3NjY1ODMzMDgsImp0aSI6ImZmYWFiNmYwZDUwYjQyOGJhYTljYTcxNThkOWQyMmRjIiwidXNlcl9pZCI6ImNjM2VmYWNkLTdiMzEtNGYyYi04OGNmLWI0ZDdhYjYxMThhMiJ9.Mwb9TEZYY_cfarifViyAL1Gzb3C6_BrKXC4DchhxW0A",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Private Chat\",\r\n  \"participants\": [1]   // <-- Only Alice\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/conversations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"conversations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "jwt",
+							"jwt": [
+								{
+									"key": "secret",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1OTQwNDIyLCJpYXQiOjE3NjU5NDAxMjIsImp0aSI6IjE3YjgxNjE5NzgxNjQ0NmE5YTFhODMyOGFhYWU0NDM3IiwidXNlcl9pZCI6IjIwNmJiMmRkLTkyZTgtNDgzMi04MDMzLTA3ODIwZTk5NmJjMyJ9.W9OSLnlvKsWXhRx9LBtLjVPyzYVAglWCqELWqBWr0TQ",
+									"type": "string"
+								},
+								{
+									"key": "payload",
+									"value": "{\r\n    \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2NjAyNjUyMiwiaWF0IjoxNzY1OTQwMTIyLCJqdGkiOiI3ODM1YzY2ZmZlYWE0MmZkYjkwY2E5NzgxN2RkMmQ4MSIsInVzZXJfaWQiOiIyMDZiYjJkZC05MmU4LTQ4MzItODAzMy0wNzgyMGU5OTZiYzMifQ.QhMIypyNswyEkdWc4H6I_owB_ieUEQn_n8KdC9R-YZg\",\r\n    \"access\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1OTQwNDIyLCJpYXQiOjE3NjU5NDAxMjIsImp0aSI6IjE3YjgxNjE5NzgxNjQ0NmE5YTFhODMyOGFhYWU0NDM3IiwidXNlcl9pZCI6IjIwNmJiMmRkLTkyZTgtNDgzMi04MDMzLTA3ODIwZTk5NmJjMyJ9.W9OSLnlvKsWXhRx9LBtLjVPyzYVAglWCqELWqBWr0TQ\"\r\n}",
+									"type": "string"
+								},
+								{
+									"key": "algorithm",
+									"value": "HS256",
+									"type": "string"
+								},
+								{
+									"key": "isSecretBase64Encoded",
+									"value": false,
+									"type": "boolean"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "queryParamKey",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "header",
+									"value": "{}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin2@example.com\",\r\n    \"password\": \"Th1nkb0ld!\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/listings/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"listings",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RefereshToken",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2NjY2NjM3MiwiaWF0IjoxNzY2NTc5OTcyLCJqdGkiOiI5OWI5NTVlZTBlMTQ0ZDBhYjkzODE5NjY0M2FjOWViNyIsInVzZXJfaWQiOiJjYzNlZmFjZC03YjMxLTRmMmItODhjZi1iNGQ3YWI2MTE4YTIifQ.2y0xBPMT-H7l54zFTMfV6XjHfSDYDUs0U3INgldjp1k\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/token/refresh/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"token",
+								"refresh",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Test Authentication",
+			"item": [
+				{
+					"name": "login user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n    \"email\": \"alice@example.com\", \r\n    \"password\": \"alice123\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/token/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"token",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create_convo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2Nzc4MjIxLCJpYXQiOjE3NjY3NzQ2MjEsImp0aSI6IjlhN2M0MDVmNDczZDRkNWQ4MWEzMWNkZTY3OWY4ZGFkIiwidXNlcl9pZCI6ImNjM2VmYWNkLTdiMzEtNGYyYi04OGNmLWI0ZDdhYjYxMThhMiJ9.28R99jmaKCXyQpQ0FUyVM0ZyZjadW3yRT9uckDLKynw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearing eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2Nzc3MTY0LCJpYXQiOjE3NjY3NzM1NjQsImp0aSI6IjU0YzZmZDRkM2Q2MjRmMmM4ZDEzZDRkNDViNDdlZWIzIiwidXNlcl9pZCI6ImNjM2VmYWNkLTdiMzEtNGYyYi04OGNmLWI0ZDdhYjYxMThhMiJ9.SB5YDO5l1bYQgiVa2HzQ8oM360wO9IhDAsblk6oNJrg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n    \"title\": \"Chat with Alice\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/conversations/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"conversations",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2NzgwNjAxLCJpYXQiOjE3NjY3NzcwMDEsImp0aSI6IjhkMjdjYWZlN2Q1MzRkOThiN2UxYmZlZWI2OGY5ZDlhIiwidXNlcl9pZCI6ImNjM2VmYWNkLTdiMzEtNGYyYi04OGNmLWI0ZDdhYjYxMThhMiJ9.qugNge2P4pfnNmmEh9uhuWZ7tgRvOf68kd2L0gfS6MI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n    \"email\": \"alice@example.com\", \r\n    \"password\": \"alice123\" \r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/users/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
