@@ -4,7 +4,7 @@ from .models import User, Conversation, Message
 from rest_framework import viewsets, status, filters
 from .serializers import UserSerializer, ConversationSerializer, MessageSerializer
 from .permissions import IsOwner, IsParticipantOfConversation
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import MessageFilter
 from .pagination import MessagePagination
@@ -12,6 +12,7 @@ from .pagination import MessagePagination
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, IsOwner] # Only authenticated users can access user data or [IsAdminUser] for admin only
     filter_backends = [filters.SearchFilter]
     search_fields = ["username", "email"]
 

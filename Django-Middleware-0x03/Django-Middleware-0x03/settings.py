@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     # third-party
     'rest_framework',
+    "rest_framework_simplejwt",
     'corsheaders',
     'drf_yasg',
 
@@ -83,17 +84,6 @@ MIDDLEWARE = [
 
     'chats.middleware.RequestLoggingMiddleware'
 ]
-
-# REST Framework configuration
-REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
-    ],
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.BasicAuthentication",
-    ],
-}
 
 ROOT_URLCONF = 'messaging_app.urls'
 

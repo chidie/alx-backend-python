@@ -4,7 +4,7 @@ from .models import User, Conversation, Message
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["user_id", "first_name", "last_name", "email", "phone_number", "role", "created_at"]
+        fields = ["id", "first_name", "last_name", "email", "phone_number", "role", "created_at"]
 
 # class PropertySerializer(serializers.ModelSerializer):
 #     class Meta:
@@ -41,7 +41,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class ConversationSerializer(serializers.ModelSerializer):
     participants = UserSerializer(many=True, read_only=True)
-    messages = MessageSerializer(many=True, read_only=True, source="messages")
+    messages = MessageSerializer(many=True, read_only=True)
     participant_count = serializers.SerializerMethodField()
 
     class Meta:
