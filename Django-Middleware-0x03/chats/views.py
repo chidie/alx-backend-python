@@ -4,7 +4,7 @@ from .models import User, Conversation, Message
 from rest_framework import viewsets, status, filters
 from .serializers import UserSerializer, ConversationSerializer, MessageSerializer
 from .permissions import IsOwner, IsParticipantOfConversation
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import MessageFilter
 from .pagination import MessagePagination
@@ -12,6 +12,7 @@ from .pagination import MessagePagination
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, IsOwner] # Only authenticated users can access user data or [IsAdminUser] for admin only
     filter_backends = [filters.SearchFilter]
     search_fields = ["username", "email"]
 
@@ -50,26 +51,21 @@ class ConversationViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(conversation)
         return Response(serializer.data)
 
-class MessageViewSet(viewsets.ModelViewSet):
-    serializer_class = MessageSerializer
-    permission_classes = [IsParticipantOfConversation]
-
-    # Adding filtering + search + ordering
-    filter_backends = [
-        DjangoFilterBackend,
-        filters.SearchFilter,
-        filters.OrderingFilter,
-    ]
-
-    filterset_class = MessageFilter
-    search_fields = ["message_body"]
-    ordering_fields = ["created_at"]
-
-    # Add pagination
-    pagination_class = MessagePagination
-
-    def get_queryset(self):
-        return Message.objects.filter(conversation__user=self.request.user) # conversation__participants for many-to-many relationship
+class MessageViewSet(viewsets.ModelViewSet): 
+    serializer_class = MessageSerializer 
     
-    def perform_create(self, serializer):
-        serializer.save(sender=self.request.user)
+    def get_queryset(self): 
+        return Message.objects.filter(
+            conversation_id=self.kwargs["conversation_pk"],
+            conversation__participants=self.request.user
+        )
+    
+    def perform_create(self, serializer): 
+        conversation = Conversation.objects.get(
+            pk=self.kwargs["conversation_pk"]
+        )
+        serializer.save(
+            sender=self.request.user,
+            conversation=conversation
+        )
+        conversation.participants.add(self.request.user)

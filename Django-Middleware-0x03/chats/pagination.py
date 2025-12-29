@@ -7,14 +7,10 @@ class MessagePagination(PageNumberPagination):
     max_page_size = 100
 
     def get_paginated_response(self, data):
+        # Return the standard DRF pagination shape so OpenAPI/Swagger can build the schema
         return Response({
-            'page': {
-                'paginator': {
-                    "count": self.page.paginator.count,
-                },
-                "number": self.page.number,
-                "has_next": self.page.has_next(),
-                "has_previous": self.page.has_previous(),
-            },
-            'results': data
+            "count": self.page.paginator.count,
+            "next": self.get_next_link(),
+            "previous": self.get_previous_link(),
+            "results": data
         })

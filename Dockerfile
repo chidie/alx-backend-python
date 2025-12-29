@@ -7,4 +7,5 @@ COPY . .
 EXPOSE 8000
 
 # Run Django development server (persistent process)
-CMD ["python", "messaging_app/manage.py", "runserver", "0.0.0.0:8000"]
+# CMD ["python", "messaging_app/manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "Django-Middleware-0x03/manage.py", "runserver", "0.0.0.0:8000"]
