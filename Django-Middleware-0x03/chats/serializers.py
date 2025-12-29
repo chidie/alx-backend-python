@@ -39,15 +39,24 @@ class MessageSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Message body cannot be blank.")
         return value
 
-class ConversationSerializer(serializers.ModelSerializer):
-    participants = UserSerializer(many=True, read_only=True)
-    messages = MessageSerializer(many=True, read_only=True)
-    participant_count = serializers.SerializerMethodField()
+# class ConversationSerializer(serializers.ModelSerializer):
+#     participants = UserSerializer(many=True, read_only=True)
+#     messages = MessageSerializer(many=True, read_only=True)
+#     participant_count = serializers.SerializerMethodField()
 
+#     class Meta:
+#         model = Conversation
+#         fields = ["conversation_id", "participants", "created_at", "messages", "participant_count"]
+
+    # def get_participant_count(self, obj):
+    #     return obj.participants.count()
+
+class ConversationSerializer(serializers.ModelSerializer):
+    participant_count = serializers.SerializerMethodField()
     class Meta:
         model = Conversation
         fields = ["conversation_id", "participants", "created_at", "messages", "participant_count"]
+        read_only_fields = ["conversation_id", "created_at", "messages", "participant_count"]
 
     def get_participant_count(self, obj):
         return obj.participants.count()
-

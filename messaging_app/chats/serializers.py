@@ -33,11 +33,8 @@ class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ["message_id", "conversation", "sender", "message_body", "sent_at", "preview"]
-    
-    def validate_message_body(self, value):
-        if not value.strip():
-            raise serializers.ValidationError("Message body cannot be blank.")
-        return value
+        read_only_fields = ["message_id", "conversation", "sender", "sent_at", "preview"]
+
 
 class ConversationSerializer(serializers.ModelSerializer):
     participants = UserSerializer(many=True, read_only=True)

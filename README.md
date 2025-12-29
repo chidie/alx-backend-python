@@ -184,6 +184,19 @@ test_client is for mocking a property.
     python manage.py runserver      # run to start the development server and test the routes
     python manage.py check          # runs Django system checks to ensure the  project configuration is valid
 ```
+How to set users info from the shell:
+(project_venv) PS C:\Users\chidi\OneDrive\Documents\ALX\SE\alx-backend-python\messaging_app> python manage.py shell
+
+```bash
+    >>> from chats.models import User
+    >>> u = User.objects.get(id="cc3efacd-7b31-4f2b-88cf-b4d7ab6118a2")
+    >>> print(u.first_name)
+
+    >>> u.first_name = "Alice"
+    >>> u.last_name = "Onuoha"
+    >>> u.role = "guest"
+    >>> u.save()
+```
 
 ## 🧑‍💻 Author  
 Chidiebere Emmanuel Onuoha
