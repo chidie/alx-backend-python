@@ -1,0 +1,71 @@
+from django.shortcuts import render
+from rest_framework.response import Response
+from .models import User, Conversation, Message
+from rest_framework import viewsets, status, filters
+from .serializers import UserSerializer, ConversationSerializer, MessageSerializer
+from .permissions import IsOwner, IsParticipantOfConversation
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import MessageFilter
+from .pagination import MessagePagination
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated, IsOwner] # Only authenticated users can access user data or [IsAdminUser] for admin only
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["username", "email"]
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        return Response(response.data, status=status.HTTP_201_CREATED)
+
+class ConversationViewSet(viewsets.ModelViewSet):
+    serializer_class = ConversationSerializer
+    permission_classes = [IsParticipantOfConversation]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ["created_at"]
+
+    def get_queryset(self):
+        # Return only conversations where the user is a participant
+        return Conversation.objects.filter(participants=self.request.user)
+
+    def perform_create(self, serializer):
+        # Create the conversation with no participants yet
+        conversation = serializer.save()
+        # Add the creator as the first participant
+        conversation.participants.add(self.request.user)
+
+    def retrieve(self, request, *args, **kwargs):
+        conversation_id = kwargs.get("pk")
+
+        # Ensure the conversation exists AND the user is a participant
+        try:
+            conversation = self.get_queryset().get(pk=conversation_id)
+        except Conversation.DoesNotExist:
+            return Response(
+                {"detail": "Conversation not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = self.get_serializer(conversation)
+        return Response(serializer.data)
+
+class MessageViewSet(viewsets.ModelViewSet): 
+    serializer_class = MessageSerializer 
+    
+    def get_queryset(self): 
+        return Message.objects.filter(
+            conversation_id=self.kwargs["conversation_pk"],
+            conversation__participants=self.request.user
+        )
+    
+    def perform_create(self, serializer): 
+        conversation = Conversation.objects.get(
+            pk=self.kwargs["conversation_pk"]
+        )
+        serializer.save(
+            sender=self.request.user,
+            conversation=conversation
+        )
+        conversation.participants.add(self.request.user)
