@@ -20,3 +20,6 @@ Unauthorized: /api/v1/conversations/e88eee9f-b5ac-4d03-b727-3c2deb1b9afc/message
 /app/Django-Middleware-0x03/Django-Middleware-0x03/settings.py changed, reloading.
 2025-12-30 01:36:27.746664 - User: Anonymous - Path: /api/token/
 Forbidden: /api/token/
+/app/Django-Middleware-0x03/chats/middleware.py changed, reloading.
+/app/Django-Middleware-0x03/Django-Middleware-0x03/settings.py changed, reloading.
+/app/Django-Middleware-0x03/Django-Middleware-0x03/settings.py changed, reloading.
