@@ -1,6 +1,7 @@
 import os
 import logging
 from datetime import datetime
+from django.conf import settings
 
 class RequestLoggingMiddleware:
     """
