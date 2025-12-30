@@ -10,7 +10,8 @@ class RequestLoggingMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
         log_dir = os.path.dirname(__file__)
-        requested_log_path = os.path.join(log_dir, 'requests.log')
+        requested_log_path = os.path.abspath(os.path.join(log_dir, "..", "requests.log"))
+
         logging.basicConfig(
             filename=requested_log_path,
             level=logging.INFO,
