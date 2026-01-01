@@ -33,9 +33,9 @@ class ConversationAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ("message_id", "sender", "receiver", "conversation", "sent_at") 
-    list_filter = ("sender", "receiver", "conversation", "sent_at") 
-    search_fields = ("message_body", "sender__email", "receiver__email")
+    list_display = ("message_id", "sender", "receiver", "content", "conversation", "timestamp") 
+    list_filter = ("sender", "receiver", "content", "conversation", "timestamp") 
+    search_fields = ("content", "sender__email", "receiver__email")
 
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):

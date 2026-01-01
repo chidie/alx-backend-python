@@ -42,8 +42,8 @@ class Message(models.Model):
     sender = models.ForeignKey(User, related_name="messages_sent", on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, related_name="messages_received", on_delete=models.CASCADE)
     conversation = models.ForeignKey(Conversation, related_name="messages", on_delete=models.CASCADE)
-    message_body = models.TextField(null=False, blank=False)
-    sent_at = models.DateTimeField(auto_now_add=True)
+    content = models.TextField(null=False, blank=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Message {self.message_id} from {self.sender.email}"

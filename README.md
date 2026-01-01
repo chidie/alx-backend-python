@@ -201,6 +201,8 @@ How to set users info from the shell:
 >NOTE: If you delete your migrations folder, you can create a new one
 ```bash
     docker compose exec app python Django-signals_orm-0x04/manage.py showmigrations messaging
+    docker compose exec app python Django-signals_orm-0x04/manage.py makemigrations messaging # To generate migrations for the messaging app
+    docker compose exec app python Django-signals_orm-0x04/manage.py makemigrations           # For all apps
     docker compose exec app python Django-signals_orm-0x04/manage.py migrate
 
     # To test for signals:
