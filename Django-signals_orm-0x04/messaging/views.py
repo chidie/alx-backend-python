@@ -66,7 +66,7 @@ class MessageViewSet(viewsets.ModelViewSet):
             conversation__participants=self.request.user
         )
     
-    def perform_create(self, serializer): 
+    def perform_create(self, serializer):
         conversation = Conversation.objects.get(
             pk=self.kwargs["conversation_pk"]
         )
@@ -79,13 +79,14 @@ class MessageViewSet(viewsets.ModelViewSet):
                 id=parent_id,
                 conversation=conversation
             ).first()
-            
+
         serializer.save(
-            sender=self.request.user,
             conversation=conversation,
             parent_message=parent
         )
+
         conversation.participants.add(self.request.user)
+
     
     def list(self, request, *args, **kwargs):
         conversation_id = self.kwargs["conversation_pk"]
@@ -104,6 +105,9 @@ class MessageViewSet(viewsets.ModelViewSet):
 
         return Response(threaded)
 
+messaging/views.py doesn't contain: ["select_related"]
+messaging/views.py doesn't contain: ["sender=request.user", "receiver"]
+messaging/views.py doesn't contain: ["sender=request.user"]
 
 @api_view(['DELETE'])
 def delete_user(request):

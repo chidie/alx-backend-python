@@ -26,6 +26,15 @@ class UserSerializer(serializers.ModelSerializer):
 #         model = Review
 #         fields = "__all__"
 
+# class MessageSerializer(serializers.ModelSerializer):
+#     sender = UserSerializer(read_only=True)
+#     preview = serializers.CharField(source="content", read_only=True)
+
+#     class Meta:
+#         model = Message
+#         fields = ["message_id", "conversation", "sender", "content", "timestamp", "preview"]
+#         read_only_fields = ["message_id", "conversation", "sender", "timestamp", "preview"]
+
 class MessageSerializer(serializers.ModelSerializer):
     sender = UserSerializer(read_only=True)
     preview = serializers.CharField(source="content", read_only=True)
@@ -34,6 +43,11 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = ["message_id", "conversation", "sender", "content", "timestamp", "preview"]
         read_only_fields = ["message_id", "conversation", "sender", "timestamp", "preview"]
+
+    def create(self, validated_data):
+        request = self.context["request"]
+        validated_data["sender"] = request.user
+        return super().create(validated_data)
 
 
 class ConversationSerializer(serializers.ModelSerializer):
