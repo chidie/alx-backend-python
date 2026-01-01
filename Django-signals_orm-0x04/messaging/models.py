@@ -46,7 +46,7 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     edited = models.BooleanField(default=False)
-    edited_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="edited_messages")
+    edited_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name="edited_messages")
 
     def __str__(self):
         return f"Message {self.message_id} from {self.sender.email} to {self.receiver.email}"

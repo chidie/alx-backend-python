@@ -8,6 +8,12 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import MessageFilter
 from .pagination import MessagePagination
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -69,3 +75,13 @@ class MessageViewSet(viewsets.ModelViewSet):
             conversation=conversation
         )
         conversation.participants.add(self.request.user)
+
+@api_view(['DELETE'])
+def delete_user(request):
+    user = request.user
+
+    if not user.is_authenticated:
+        return Response({"error": "Authentication required."}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    user.delete()
+    return Response({"message": "User deleted successfully."}, status=status.HTTP_200_OK)
