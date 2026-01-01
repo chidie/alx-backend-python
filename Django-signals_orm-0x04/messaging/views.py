@@ -70,11 +70,40 @@ class MessageViewSet(viewsets.ModelViewSet):
         conversation = Conversation.objects.get(
             pk=self.kwargs["conversation_pk"]
         )
+
+        parent_id = self.request.data.get("parent_message")
+        parent = None
+
+        if parent_id:
+            parent = Message.objects.filter(
+                id=parent_id,
+                conversation=conversation
+            ).first()
+            
         serializer.save(
             sender=self.request.user,
-            conversation=conversation
+            conversation=conversation,
+            parent_message=parent
         )
         conversation.participants.add(self.request.user)
+    
+    def list(self, request, *args, **kwargs):
+        conversation_id = self.kwargs["conversation_pk"]
+
+        messages = (
+            Message.objects
+            .filter(conversation_id=conversation_id, parent_message__isnull=True)
+            .select_related("sender", "receiver", "parent_message")
+            .prefetch_related("replies")
+            .order_by("timestamp")
+        )
+
+        from .threading import build_thread
+
+        threaded = [build_thread(m) for m in messages]
+
+        return Response(threaded)
+
 
 @api_view(['DELETE'])
 def delete_user(request):
