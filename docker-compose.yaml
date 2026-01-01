@@ -2,25 +2,27 @@ services:
   app:
     build: .
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     depends_on:
       - db
     ports:
       - "8000:8000"
     volumes:
       - .:/app
-    
+  
   db:
-    image: mysql:8.0
+    image: postgres:16-alpine
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    ports:
-      - "3306:3306"
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
 
 volumes:
   db_data: {}

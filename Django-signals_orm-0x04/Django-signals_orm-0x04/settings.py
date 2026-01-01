@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_yasg',
 
-    'chats', # local app
+    'messaging', # local app
 ]
 
 REST_FRAMEWORK = {
@@ -73,7 +73,7 @@ SIMPLE_JWT = {
 }
 
 # Custom user model
-AUTH_USER_MODEL = "chats.User"
+AUTH_USER_MODEL = "messaging.User"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -110,11 +110,14 @@ WSGI_APPLICATION = 'Django-signals_orm-0x04.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'user_data.db',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators

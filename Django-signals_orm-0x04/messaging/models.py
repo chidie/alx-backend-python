@@ -39,13 +39,24 @@ class Conversation(models.Model):
 
 class Message(models.Model):
     message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    sender = models.ForeignKey(User, related_name="message_sent", on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, related_name="messages_sent", on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, related_name="messages_received", on_delete=models.CASCADE)
     conversation = models.ForeignKey(Conversation, related_name="messages", on_delete=models.CASCADE)
     message_body = models.TextField(null=False, blank=False)
     sent_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Message {self.message_id} from {self.sender_id.email}"
+        return f"Message {self.message_id} from {self.sender.email}"
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, related_name="notifications", on_delete=models.CASCADE)
+    message = models.ForeignKey(Message, related_name="notifications", on_delete=models.CASCADE)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Notification for {self.user.email} - Read: {self.is_read}"
+
     
 # class Property(models.Model):
 #     property_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

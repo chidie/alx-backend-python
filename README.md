@@ -198,6 +198,34 @@ How to set users info from the shell:
     >>> u.save()
 ```
 
+>NOTE: If you delete your migrations folder, you can create a new one
+```bash
+    docker compose exec app python Django-signals_orm-0x04/manage.py showmigrations messaging
+    docker compose exec app python Django-signals_orm-0x04/manage.py migrate
+
+    # To test for signals:
+    from messaging.models import User, Conversation, Message, Notification
+    >>>
+    >>> sender = User.objects.create_user(email="sender@test.com", password="pass123")
+    er@test.com", password="pass123")
+    >>> receiver = User.objects.create_user(email="receiver@test.com", password="pass123")
+    >>> conv = Conversation.objects.create()
+    ants.set([sender, receiver])
+    >>> conv.participants.set([sender, receiver])
+    >>> msg = Message.objects.create(
+    ...     sender=sender,
+    ...     receiver=receiver,
+    ...     conversation=conv,
+    ...     message_body="Hello!"
+    ... )
+    >>> Notification.objects.filter(user=receiver, message=msg).exists()
+    True
+    >>> msg.message_body = "Edited message"
+    >>> msg.save()
+    >>> Notification.objects.filter(message=msg).count()
+    1
+    >>>
+```
 ## 🧑‍💻 Author  
 Chidiebere Emmanuel Onuoha
 
