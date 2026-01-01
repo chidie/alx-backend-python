@@ -44,6 +44,7 @@ class Message(models.Model):
     conversation = models.ForeignKey(Conversation, related_name="messages", on_delete=models.CASCADE)
     content = models.TextField(null=False, blank=False)
     timestamp = models.DateTimeField(auto_now_add=True)
+    parent_message = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="replies")
 
     edited = models.BooleanField(default=False)
     edited_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name="edited_messages")
