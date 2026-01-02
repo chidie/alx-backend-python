@@ -8,6 +8,10 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import MessageFilter
 from .pagination import MessagePagination
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from rest_framework.views import APIView
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -69,3 +73,11 @@ class MessageViewSet(viewsets.ModelViewSet):
             conversation=conversation
         )
         conversation.participants.add(self.request.user)
+
+@method_decorator(cache_page(60), name='get')   # ← 60 seconds
+class CachedConversationMessagesView(APIView):
+
+    def get(self, request, conversation_id):
+        messages = Message.objects.filter(conversation_id=conversation_id).order_by('timestamp')
+        serializer = MessageSerializer(messages, many=True)
+        return Response(serializer.data)
