@@ -13,6 +13,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
 
 User = get_user_model()
 
@@ -137,3 +140,11 @@ def delete_user(request):
     
     user.delete()
     return Response({"message": "User deleted successfully."}, status=status.HTTP_200_OK)
+
+@method_decorator(cache_page(60), name='get')   # ← 60 seconds
+class CachedConversationMessagesView(APIView):
+
+    def get(self, request, conversation_id):
+        messages = Message.objects.filter(conversation_id=conversation_id).order_by('timestamp')
+        serializer = MessageSerializer(messages, many=True)
+        return Response(serializer.data)
