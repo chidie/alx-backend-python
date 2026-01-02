@@ -3,6 +3,7 @@ from django.db import models
 from .managers import CustomUserManager
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+from .managers import UnreadMessagesManager
 
 class User(AbstractUser):
     username = None  # Remove username field
@@ -36,15 +37,6 @@ class Conversation(models.Model):
 
     def __str__(self):
         return f"Conversation {self.conversation_id}"
-
-class UnreadMessagesManager(models.Manager):
-    def for_user(self, user):
-        return (
-            super()
-            .get_queryset()
-            .filter(receiver=user, read=False)
-            .only("message_id", "sender", "content", "timestamp")
-        )
     
 class Message(models.Model):
     message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

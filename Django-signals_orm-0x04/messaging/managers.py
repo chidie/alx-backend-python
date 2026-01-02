@@ -1,4 +1,5 @@
 from django.contrib.auth.base_user import BaseUserManager
+from django.db import models
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -20,3 +21,12 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
 
         return self.create_user(email, password, **extra_fields)
+
+class UnreadMessagesManager(models.Manager):
+    def unread_for_user(self, user):
+        return (
+            super()
+            .get_queryset()
+            .filter(receiver=user, read=False)
+            .only("message_id", "sender", "content", "timestamp")
+        )
