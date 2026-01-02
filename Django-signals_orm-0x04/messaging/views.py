@@ -108,7 +108,11 @@ class MessageViewSet(viewsets.ModelViewSet):
 
 class InboxView(APIView):
     def get(self, request):
-        unread_messages = Message.unread.unread_for_user(request.user)
+        unread_messages = (
+            Message.unread.unread_for_user(request.user)
+            .only("id", "sender", "recipient", "subject", "body", "timestamp")
+        )
+
         serializer = MessageSerializer(unread_messages, many=True)
         return Response(serializer.data)
 
