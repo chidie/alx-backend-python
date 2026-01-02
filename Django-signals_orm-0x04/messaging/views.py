@@ -12,6 +12,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
+from rest_framework.views import APIView
 
 User = get_user_model()
 
@@ -105,9 +106,23 @@ class MessageViewSet(viewsets.ModelViewSet):
 
         return Response(threaded)
 
-messaging/views.py doesn't contain: ["select_related"]
-messaging/views.py doesn't contain: ["sender=request.user", "receiver"]
-messaging/views.py doesn't contain: ["sender=request.user"]
+class InboxView(APIView):
+    def get(self, request):
+        unread_messages = Message.unread.for_user(request.user)
+        serializer = MessageSerializer(unread_messages, many=True)
+        return Response(serializer.data)
+
+class MarkAsReadView(APIView):
+    def post(self, request, message_id):
+        updated = Message.objects.filter(
+            pk=message_id,
+            receiver=request.user
+        ).update(read=True)
+
+        if updated == 0:
+            return Response({"detail": "Message not found or not yours."}, status=404)
+
+        return Response({"status": "ok"})
 
 @api_view(['DELETE'])
 def delete_user(request):

@@ -37,6 +37,15 @@ class Conversation(models.Model):
     def __str__(self):
         return f"Conversation {self.conversation_id}"
 
+class UnreadMessagesManager(models.Manager):
+    def for_user(self, user):
+        return (
+            super()
+            .get_queryset()
+            .filter(receiver=user, read=False)
+            .only("message_id", "sender", "content", "timestamp")
+        )
+    
 class Message(models.Model):
     message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     sender = models.ForeignKey(User, related_name="messages_sent", on_delete=models.CASCADE)
@@ -46,8 +55,12 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     parent_message = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="replies")
 
+    read = models.BooleanField(default=False)
     edited = models.BooleanField(default=False)
     edited_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name="edited_messages")
+
+    objects = models.Manager()              # default manager
+    unread = UnreadMessagesManager()        # custom manager
 
     def __str__(self):
         return f"Message {self.message_id} from {self.sender.email} to {self.receiver.email}"
