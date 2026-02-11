@@ -3,3 +3,5 @@ __pycache__/
 .env/
 01-init.sql
 *.pyc
+django_secret.yml
+postgres-secret.yml

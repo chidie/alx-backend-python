@@ -13,7 +13,7 @@ Your code should use the pycodestyle style (version 2.5)
 
 
 
-# 🧪 Python Unit Testing Project
+# Python Unit Testing Project
 ### Testing `access_nested_map`, `get_json`, and `memoize` utilities
 
 This project contains a suite of **unit tests** for utility functions defined in the `utils` module.  
@@ -28,7 +28,7 @@ The goal is to validate functionality, raise proper exceptions, and ensure memoi
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 project/
@@ -39,9 +39,9 @@ project/
 
 ---
 
-## 🧰 Features Tested
+## Features Tested
 
-### ✅ 1. `access_nested_map`
+### 1. `access_nested_map`
 A helper function used to retrieve values deep inside nested dictionaries.
 
 #### **Tests include:**
@@ -51,7 +51,7 @@ A helper function used to retrieve values deep inside nested dictionaries.
 
 ---
 
-### ✅ 2. `get_json`
+### 2. `get_json`
 Fetches JSON from a URL using `requests.get`.
 
 #### **Tests include:**
@@ -63,7 +63,7 @@ No real HTTP request is made during the tests.
 
 ---
 
-### ✅ 3. `memoize`
+### 3. `memoize`
 A decorator used to cache results of a method call inside an instance.
 
 #### **Tests include:**
@@ -73,7 +73,7 @@ A decorator used to cache results of a method call inside an instance.
 
 ---
 
-## 📦 Installation
+## Installation
 
 Install dependencies:
 
@@ -91,7 +91,7 @@ pip install -r requirements.txt
 
 ---
 
-## ▶️ Running Tests
+## Running Tests
 
 From the project root:
 
@@ -107,7 +107,7 @@ python3 -m unittest discover
 
 ---
 
-## 📝 Example Tested Utilities
+## Example Tested Utilities
 
 ### `access_nested_map`
 ```python
@@ -228,6 +228,74 @@ How to set users info from the shell:
     1
     >>>
 ```
-## 🧑‍💻 Author  
+
+>NOTE: To use kubernetes deployments, create one as in deployment.yml
+- Create a deployment file
+- Start minikube or kind
+- Run your deployment
+```bash
+    minikube start
+    kubectl get nodes
+    kubectl apply -f deployment.yml
+    kubectl get nodes
+    kubectl get pods
+    kubectl config use-context minikube # optional if you had kind already running and need to switch to minikube
+    kubectl get nodes
+    kind delete cluster # optional to delete cluster created by kind.
+    kubectl get deployments
+    kubectl get svc
+
+    # Rebuild your image INSIDE Minikube (this is mandatory)
+    minikube image build -t messaging-app:latest . # Build the image inside the minikube
+    kubectl get pods
+
+    # If target image is not inside minikube, this may result
+    image: messaging-app:latest
+    imagePullPolicy: Never
+
+    minikube image ls   # Confirm the image exists inside Minikube -> Confirm the image exists inside Minikube
+    kubectl delete pod -l app=messaging-app # Delete old pods so they restart with the new image
+
+    # Restart your deployment
+    kubectl delete pod -l app=messaging-app
+
+    # If the image is still found in docker registry instead of minikube, then Switch your shell to use Minikube’s Docker daemon
+    minikube -p minikube docker-env | Invoke-Expression # This rewires the powershell so that 'docker build' and 'minikube image build' both build inside minikube not docker desktop
+    docker images
+    
+    # Rebuild image inside minikube
+    docker build -t messaging-app:latest .
+
+    To convert string to base64:
+    [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("PASTE_YOUR_SECRET_HERE"))
+
+    # Best way to troubleshoot this:
+    - restart Docker desktop
+    - delete all containers or containers related to minikube
+    
+    minikube stop
+    minikube delete --all --purge
+    minikube start --driver=docker
+    minikube update-context
+    & minikube -p minikube docker-env | Invoke-Expression
+    echo $Env:DOCKER_HOST
+    docker build -t myimage:latest .
+    minikube image ls | Select-String "messaging-app"
+    kubectl apply -f deployment.yaml
+
+    # verify the app is present 
+    minikube ssh
+    docker images | grep messaging-app
+
+    # After updating the deployment or service, apply it and restart the deployment
+    kubectl apply -f deployment.yml
+    kubectl rollout restart deployment messaging-app-deployment
+    kubectl get pods
+    kubectl logs postgres-<pod-name>
+    kubectl describe pod -l app=postgres
+    kubectl logs -l app=messaging-app
+```
+- 
+## Author  
 Chidiebere Emmanuel Onuoha
 

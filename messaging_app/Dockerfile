@@ -13,6 +13,6 @@ COPY . .
 EXPOSE 8000
 
 # Example run command: docker run -p 8000:8000 messaging-app
-# CMD ["python", "messaging_app/manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 # CMD ["python", "Django-Middleware-0x03/manage.py", "runserver", "0.0.0.0:8000"]
-CMD ["python", "Django-signals_orm-0x04/manage.py", "runserver", "0.0.0.0:8000"]
+# CMD ["python", "Django-signals_orm-0x04/manage.py", "runserver", "0.0.0.0:8000"]
