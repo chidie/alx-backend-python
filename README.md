@@ -279,21 +279,54 @@ How to set users info from the shell:
     minikube update-context
     & minikube -p minikube docker-env | Invoke-Expression
     echo $Env:DOCKER_HOST
-    docker build -t myimage:latest .
+    docker build -t messaging-app:latest .
     minikube image ls | Select-String "messaging-app"
+    kubectl apply -f django-secret.yaml
+    kubectl apply -f service.yaml
+    kubectl apply -f postgres-secret.yaml
+    kubectl apply -f postgres.yaml
     kubectl apply -f deployment.yaml
+    kubectl rollout restart deployment messaging-app-deployment
+    kubectl get nodes
+    kubectl get svc
+    kubectl get pods
 
     # verify the app is present 
     minikube ssh
     docker images | grep messaging-app
 
-    # After updating the deployment or service, apply it and restart the deployment
+    ##### TROUBLESHOOTING TIPS ####
+    # If messaging-app is not found in the list of docker images it means
+    # that you built your Docker image on your host machine, not inside Minikube’s Docker daemon. Minikube runs its own internal Docker engine.
+    # Kubernetes can only see images built inside that engine.
+    #- Switch your terminal to use Minikube’s Docker daemon
+    eval $(minikube docker-env) 
+    # The above command rewires Docker CLI so that 'docker build', 'docker images' and 'docker run' all operate inside Minikube, not on your host.
+    # Now build Django image inside Minikube
+    docker build -t messaging-app:latest .
+    docker images
+    kubectl rollout restart deployment messaging-app-deployment
+    kubectl get pods
+    # Expected ErrImageNeverPull changes to ContainerCreating → Running
+    # A reliable option to see your app is via port-forwarding or minikube service command
+    kubectl port-forward svc/messaging-app-service 8080:8000
+
+    ##### After updating the deployment or service, apply it and restart the deployment
     kubectl apply -f deployment.yml
     kubectl rollout restart deployment messaging-app-deployment
     kubectl get pods
     kubectl logs postgres-<pod-name>
     kubectl describe pod -l app=postgres
     kubectl logs -l app=messaging-app
+
+
+    # To access Django app on local browser, use nodePort instead of clusterIP in the service.yaml file.
+    http://localhost:30080
+    # Option2 is to use minikube service
+    minikube service messaging-app-service
+    # Option3: Port-forward
+    kubectl port-forward svc/messaging-app-service 8080:8000
+    http://localhost:8080
 ```
 - 
 ## Author  

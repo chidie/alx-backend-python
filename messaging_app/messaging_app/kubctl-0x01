@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+echo "=== Scaling Django Deployment to 3 Replicas ==="
+kubectl scale deployment messaging-app-deployment --replicas=3
+
+echo "=== Verifying Running Pods ==="
+kubectl get pods -o wide
+
+echo "=== Performing Load Test with wrk ==="
+
+# Check if wrk is installed
+if ! command -v wrk >/dev/null 2>&1; then
+    echo "wrk is not installed. Please install wrk to run load tests."
+else
+    # Get Minikube IP
+    MINIKUBE_IP=$(minikube ip)
+
+    echo "Minikube IP: $MINIKUBE_IP"
+    echo "Running wrk for 10 seconds on http://$MINIKUBE_IP:30080/"
+
+    wrk -t4 -c50 -d10s http://$MINIKUBE_IP:30080/
+fi
+
+echo "=== Monitoring Resource Usage ==="
+
+# Check if metrics-server is installed
+if ! kubectl top nodes >/dev/null 2>&1; then
+    echo "Metrics server not available. Enable it with:"
+    echo "minikube addons enable metrics-server"
+else
+    kubectl top nodes
+    kubectl top pods
+fi
+
+echo "=== Script Completed Successfully ==="
