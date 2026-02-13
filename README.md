@@ -327,7 +327,25 @@ How to set users info from the shell:
     # Option3: Port-forward
     kubectl port-forward svc/messaging-app-service 8080:8000
     http://localhost:8080
+
 ```
+
+## To install the NGINX ingress controller on minikube:
+```bash
+    minikube addons enable ingress
+    kubectl get pods -n ingress-nginx
+    kubectl get svc -n ingress-nginx
+```
+
+# To add a host entry so the browser can resolve the domain name to the minikube IP:
+
+```bash
+    # Open Powershell in Administrator mode and 
+    notepad C:\Windows\System32\drivers\etc\hosts
+    minikube ip
+    # Add the following line to your /etc/hosts file (replace <minikube-ip> with the actual IP address):
+    <minikube-ip> messaging-app.local
+```bash
 - 
 ## Author  
 Chidiebere Emmanuel Onuoha
