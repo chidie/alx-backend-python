@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+echo "=== Applying updated BLUE deployment (version 2.0) ==="
+kubectl apply -f blue_deployment.yaml
+
+echo "=== Triggering rolling update ==="
+kubectl rollout status deployment/messaging-app-blue
+
+echo "=== Checking current pods ==="
+kubectl get pods -l version=blue -o wide
+
+echo "=== Starting continuous curl test to detect downtime ==="
+SERVICE_IP=$(minikube ip)
+URL="http://$SERVICE_IP:30080"
+
+echo "Testing endpoint: $URL"
+echo "Press CTRL+C to stop."
+
+while true; do
+    STATUS=$(curl -s -o /dev/null -w "%{http_code}" $URL)
+    TIME=$(date +"%H:%M:%S")
+    echo "[$TIME] HTTP Status: $STATUS"
+    sleep 1
+done

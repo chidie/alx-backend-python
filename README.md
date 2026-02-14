@@ -346,6 +346,11 @@ How to set users info from the shell:
     # Add the following line to your /etc/hosts file (replace <minikube-ip> with the actual IP address):
     <minikube-ip> messaging-app.local
 ```bash
+
+- After an upgrade, to ensure the update is progressing without errors:
+```bash
+    kubectl rollout status deployment/messaging-app-blue
+```
 - 
 ## Author  
 Chidiebere Emmanuel Onuoha
